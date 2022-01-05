@@ -172,12 +172,37 @@ void InserirNaSolucao(tSolucao& s1, int& selecionado)
 
 
 
-int main(int argc, char *argv[])
+int main(void)
 {
     /*  Iniciamos o primeiro tour com, 1 e 1, e depois vamos vamos colocar 3 vértices aleatórias    */
     tSolucao s1 = {{1,1}, 0}; /* Sempre iniciar o primeiro tour com 1 e 1    */
     
-    printf("%d\n", argc);
+    /*  Pegando dados das instancias    */
+    char buffer[1000];
+    int dimensao;
+    scanf("%s %d", buffer, &dimensao);
+    printf("%d\n", dimensao);
+
+    int matriz[dimensao][dimensao];
+    for(int i = 0; i < dimensao; i++)
+    {
+        for(int j = 0; j < dimensao; j++)
+        {
+            scanf("%d ", &matriz[i][j]);
+        }
+    }
+
+    /*  Verificação se está certo ou não
+    for(int i = 0; i < dimensao; i++)
+    {
+        for(int j = 0; j < dimensao; j++)
+        {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+    */
+    
     Escolher3NumerosAleatorios(s1);    /*  Chamada da função para escolha de três números aleatórios   */
     /*  Exemplo: s1, agora vira tour para os vertices {1,2,3,4,1}   */
 
