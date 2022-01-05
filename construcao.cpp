@@ -29,6 +29,9 @@ typedef struct
 }InsertionInfo;
 
 
+
+
+
 void Escolher3NumerosAleatorios(tSolucao& s1)
 {
     int aleatorio;  /*  Número aleatório determinado    */
@@ -210,12 +213,11 @@ bool BestImprovemmentSwap(tSolucao *s)
     return false;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     /*  Iniciamos o primeiro tour com, 1 e 1, e depois vamos vamos colocar 3 vértices aleatórias    */
     tSolucao s1 = {{1,1}, 0}; /* Sempre iniciar o primeiro tour com 1 e 1    */
-   
-   
+    
     Escolher3NumerosAleatorios(s1);    /*  Chamada da função para escolha de três números aleatórios   */
     /*  Exemplo: s1, agora vira tour para os vertices {1,2,3,4,1}   */
 
