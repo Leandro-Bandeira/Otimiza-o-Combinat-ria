@@ -192,7 +192,8 @@ int main(void)
         }
     }
 
-    /*  Verificação se está certo ou não
+    /*  Adicionar depois a partir do 1 não 0    */
+    /*  Verificação se está certo ou não    */
     for(int i = 0; i < dimensao; i++)
     {
         for(int j = 0; j < dimensao; j++)
@@ -201,7 +202,7 @@ int main(void)
         }
         printf("\n");
     }
-    */
+    
     
     Escolher3NumerosAleatorios(s1);    /*  Chamada da função para escolha de três números aleatórios   */
     /*  Exemplo: s1, agora vira tour para os vertices {1,2,3,4,1}   */
