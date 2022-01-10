@@ -10,6 +10,8 @@
 
 using namespace std;
 
+
+#define MAX 100
 typedef struct Solucao
 {
     vector <int> sequencia;
@@ -27,6 +29,11 @@ typedef struct
     double custo; // delta ao inserir k na aresta {i, j}
 
 }InsertionInfo;
+
+typedef struct
+{
+    vector <int> verticeB;
+}tVertice;
 
 
 
@@ -132,7 +139,7 @@ vector <int> Restantes(tSolucao& s1, int quantidade)
 }
 
 /*  &s é uma passagem por referencia, estamos de fato passando seu valor   */
-vector <InsertionInfo>  CalcularCustoInsercao(tSolucao& s1, vector <int>& CL, int c[][14])
+vector <InsertionInfo>  CalcularCustoInsercao(tSolucao& s1, vector <int>& CL, tVertice matriz[])
 {
     int i = 0;
     int j;
@@ -151,7 +158,7 @@ vector <InsertionInfo>  CalcularCustoInsercao(tSolucao& s1, vector <int>& CL, in
         /*  Estamos aqui acessando todos os vértices que faltam adicionar no tour   */
         for (auto k : CL) 
         {
-            custoInsercao[l].custo = c[i][k] + c[j][k] - c[i][j];   /*  Calculo do custo    */
+            custoInsercao[l].custo = matriz[i].verticeB[k] + matriz[j].verticeB[k] - matriz[i].verticeB[j];   /*  Calculo do custo    */
             custoInsercao[l].noInserido = k;                        /*  Valor inserido  */
             custoInsercao[l].arestaRemovida = a;                    /*  Aresta removida */
             l++;
@@ -190,31 +197,34 @@ int main(void)
     
     /*  Pegando dados das instancias    */
     char buffer[1000];
-    int dimensao;
-    scanf("%s %d", buffer, &dimensao);
-    printf("%d\n", dimensao);
+    int dimensao, numero;
+    cin >> buffer >> dimensao;
+
+    //cout << dimensao;
+
 
     /*  Testando com o bruma14  */
-    int matriz[14][14];
+    tVertice matriz[dimensao];
     for(int i = 0; i < dimensao; i++)
     {
         for(int j = 0; j < dimensao; j++)
         {
-            scanf("%d ", &matriz[i][j]);
+            cin >> numero;
+            matriz[i].verticeB.push_back(numero);
         }
     }
 
     
-    /*  Verificação se está certo ou não
+    //  Verificação se está certo ou não
     for(int i = 0; i < dimensao; i++)
     {
         for(int j = 0; j < dimensao; j++)
         {
-            printf("%d ", matriz[i][j]);
+            cout << matriz[i].verticeB[j] << " "; 
         }
-        printf("\n");
+        cout << endl;
     }
-    */
+    
     
     /*  Chamada da função para escolha de três números aleatórios   */
     /*  Enviamos dimensão porque é a quantidade de véritices    */
