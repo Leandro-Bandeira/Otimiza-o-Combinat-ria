@@ -30,6 +30,7 @@ typedef struct
 
 }InsertionInfo;
 
+/* struct responsável por armazenar os dados de distância entre as cidades  */
 typedef struct
 {
     vector <int> verticeB;
@@ -193,17 +194,17 @@ void InserirNaSolucao(tSolucao& s1, int& selecionado)
 int main(void)
 {
     /*  Iniciamos o primeiro tour com, 1 e 1, e depois vamos vamos colocar 3 vértices aleatórios    */
-    tSolucao s1 = {{1,1}, 0}; /* Sempre iniciar o primeiro tour com 1 e 1    */
+    tSolucao s1 = {{1,1}, 0, 0}; /* Sempre iniciar o primeiro tour com 1 e 1    */
     
     /*  Pegando dados das instancias    */
     char buffer[1000];
     int dimensao, numero;
     cin >> buffer >> dimensao;
 
-    //cout << dimensao;
 
-
-    /*  Testando com o bruma14  */
+    /*  Vamos primeiramente  inicializar uma matriz, do tipo tVertice o qual vai conter as distâncias entre todas as cidades    */
+    /*  A struct contém um vector e estamos simulando uma matriz 2x2, no qual o índice do array corresponde a cidade A e o índice do vector a cidade B */
+    /*  Logo, o valor armazenado em matriz[0].verticeB[1] é a distância entre a primeira e a segunda cidade */
     tVertice matriz[dimensao];
     for(int i = 0; i < dimensao; i++)
     {
@@ -215,7 +216,7 @@ int main(void)
     }
 
     
-    //  Verificação se está certo ou não
+    /* Verificação se está certo ou não
     for(int i = 0; i < dimensao; i++)
     {
         for(int j = 0; j < dimensao; j++)
@@ -224,6 +225,8 @@ int main(void)
         }
         cout << endl;
     }
+    */
+
     
     
     /*  Chamada da função para escolha de três números aleatórios   */
