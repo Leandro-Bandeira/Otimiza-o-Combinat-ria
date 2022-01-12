@@ -57,7 +57,7 @@ void Escolher3NumerosAleatorios(tSolucao& s1, int quantidade)
 {
     int aleatorio;  /*  Número aleatório determinado    */
     int presente;   /*  Variável que diz, se o número aleatório já foi escolhido ou não */
-    //V = {1,2,3,4,5,6,7,8,9, 10}   Vértices totais
+
 
 
     unsigned seed = time(0);    /*  Criação de uma semente para gerar aleatoriedade */
@@ -116,7 +116,7 @@ vector <int> Restantes(tSolucao& s1, int quantidade)
 {
     /*  Criação de todos os vertices    */
     vector <int> v;
-    for(int i = 2; i <= quantidade; i++)
+    for(int i = 2; i < quantidade; i++)
     {
         v.push_back(i);
 
@@ -140,28 +140,50 @@ vector <int> Restantes(tSolucao& s1, int quantidade)
 }
 
 /*  &s é uma passagem por referencia, estamos de fato passando seu valor   */
+
+/****
+ * CalcularCUstoInsercao(): Função responsável por calcular o custo insercao, de cada vértice pertecente a CL no primeiro tour
+ * 
+ * 
+ * Parâemtros:
+ *                          s1(entrada): Primeiro tour
+ *                          CL(entrada): vértices que faltam serem inseridos no tour
+ *                          matriz(entrada): Dados responsáveis pela distancia entre as cidades
+ * 
+ * 
+ * Retorno:
+ *                          vector que possui todos os dados de inserção
+ * 
+ ****/
 vector <InsertionInfo>  CalcularCustoInsercao(tSolucao& s1, vector <int>& CL, tVertice matriz[])
 {
-    int i = 0;
-    int j;
+    int i = 0;  /*  Primeiro Vértice    */
+    int j;      /*  Segundo vértice */
     /*  Criação da lista de cada k de CL associado a um par de arestas  */
     vector <InsertionInfo> custoInsercao((s1.sequencia.size() - 1) * CL.size());
-    int l = 0;
+    int l = 0;  /*  Variávelr responsável pelo índice de custoInsercao  */
     
+    /*  Primeiro vamos selecionar os dois primeiros vértices do tour inicial    */
+    /*  Depois criamos um loop para cada CL, onde será calculado o custo de inseri-lo entre os valores de i e j, depois será armazenado qual vértice foi inserido e a aresta removida   */
     for(int a = 0, b = 1; a < s1.sequencia.size() - 1; a++, b++) 
     {
         /*  EX: s' = {1,2,3,4,1}    */
         /*  CL = {5,6,7,8,9}
         /*  i = 1 e j = 2   */
         i = s1.sequencia[a];  /*  a e b são os índices dos vértices  {i,j}    */
+        /*  Foi retirado um de i e de j, pois a matriz está organizada a partir do índice 0, então a cidade 1 equivale a cidade 0 e assim sucessivamente    */
+        i--;
         j = s1.sequencia[b];
+        j--;
         /*  K é do tipo inteiro */
         /*  Estamos aqui acessando todos os vértices que faltam adicionar no tour   */
         for (auto k : CL) 
         {
+            /* O que aconteceu com i e j, também deve ser feito para k, pois a cidade 14, por exemplo, equivale a cidade 13 */
+            k--;
             custoInsercao[l].custo = matriz[i].verticeB[k] + matriz[j].verticeB[k] - matriz[i].verticeB[j];   /*  Calculo do custo    */
             custoInsercao[l].noInserido = k;                        /*  Valor inserido  */
-            custoInsercao[l].arestaRemovida = a;                    /*  Aresta removida */
+            custoInsercao[l].arestaRemovida = i;                    /*  Aresta removida */
             l++;
         }
     }
@@ -169,8 +191,27 @@ vector <InsertionInfo>  CalcularCustoInsercao(tSolucao& s1, vector <int>& CL, tV
     
 }
 
+/****
+ * OrdenaremOrdemCrescente(): Função responsável por colocar os custos em ordem crescente
+ * 
+ * 
+ * Parâmetros:
+ *          
+ * 
+ *                          CustoInsercao(entrada e saída): Variável no qual haverá o ordenamento
+ * 
+ * Observações:
+ *                          Só ordena o custo
+ * 
+ * Retorno:
+ *                          nenhum
+ * 
+ ****/
 void OrdenarEmOrdemCrescente(vector <InsertionInfo>& custoInsercao)
 {
+    /*  Utilizacao do metodo sort, define o inicio e o fim, como sendo todo o vector de CustoInsercao  */
+    /*  Define duas variáveis do tipo InsertionInfo */
+    /*  No qual, essas variáveis vão acessar somente o custo e ordená-los   */
     sort(custoInsercao.begin(), custoInsercao.end(), [](InsertionInfo a, InsertionInfo b)
     {
 
@@ -179,12 +220,6 @@ void OrdenarEmOrdemCrescente(vector <InsertionInfo>& custoInsercao)
     });
     
     
-
-}
-
-void InserirNaSolucao(tSolucao& s1, int& selecionado)
-{
-    s1.sequencia.insert(s1.sequencia.end(), selecionado);
 
 }
 
@@ -197,14 +232,16 @@ int main(void)
     tSolucao s1 = {{1,1}, 0, 0}; /* Sempre iniciar o primeiro tour com 1 e 1    */
     
     /*  Pegando dados das instancias    */
-    char buffer[1000];
-    int dimensao, numero;
+    char buffer[1000];  /*  Pega somente o nome "dimensao"  */
+    int dimensao, numero;   /*  Variável dimensao pega o tamanho da matriz e o número por pegar os dados    */
     cin >> buffer >> dimensao;
+    
 
 
     /*  Vamos primeiramente  inicializar uma matriz, do tipo tVertice o qual vai conter as distâncias entre todas as cidades    */
     /*  A struct contém um vector e estamos simulando uma matriz 2x2, no qual o índice do array corresponde a cidade A e o índice do vector a cidade B */
     /*  Logo, o valor armazenado em matriz[0].verticeB[1] é a distância entre a primeira e a segunda cidade */
+    /*  Lembre-se, que a cidade 1 equivale a cidade 0, pois a matriz começa em 0    */
     tVertice matriz[dimensao];
     for(int i = 0; i < dimensao; i++)
     {
@@ -216,7 +253,8 @@ int main(void)
     }
 
     
-    /* Verificação se está certo ou não
+   
+    /*
     for(int i = 0; i < dimensao; i++)
     {
         for(int j = 0; j < dimensao; j++)
@@ -226,6 +264,8 @@ int main(void)
         cout << endl;
     }
     */
+    
+    
 
     
     
@@ -243,9 +283,11 @@ int main(void)
     }
     cout << endl;
     */
+    
 
     /*  Precisamos agora criar os vértices restantes que ainda faltam ser inseridos */
     vector <int> CL = Restantes(s1, dimensao);     /* Criação do CL */
+    
     
     /*
     cout << "CL: " << CL.size() << endl;
@@ -253,22 +295,35 @@ int main(void)
     {
         cout << CL[i] << " "; 
     }
-    
-    
-    cout << CL[0];
-    cout << CL.size() << endl;
+    cout << endl;
     */
     
     
     
- 
+    
+    
+    
     /*  Enquanto CL não estiver vazio, nós vamos fazer o teste de cada vértice que pertence a CL na entrada de uma aresta {i, j}    */
     /*  Vamos calcular seu custo de inserção e após isso, ordenar todos em ordem crescente  */
     
-    while(!CL.empty())
+    vector <InsertionInfo>  custoInsercao = CalcularCustoInsercao(s1, CL, matriz);
+    /*  Chama a função para ordenar em forma crescente  */
+    OrdenarEmOrdemCrescente(custoInsercao);
+    
+    
+
+
+
+
+    /*
+    for(int i = 0; i < custoInsercao.size(); i++)
     {
-        vector <InsertionInfo>  custoInsercao = CalcularCustoInsercao(s1, CL, matriz);
+        cout << "Onde inserido: " << custoInsercao[i].noInserido << endl << "Aresta removida " << custoInsercao[i].arestaRemovida << endl << "Custo: "<< custoInsercao[i].custo << endl<< "-------- "<< endl;
+
     }
+    */
+    
+    return 0;
     
     
     
