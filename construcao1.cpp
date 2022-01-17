@@ -239,6 +239,7 @@ void InserirNaSolucao(tSolucao&s1, int selecionado, int k)
     /*  É necessário somar aqui pois foi retirado 1 anteriormente por conta do index 0 dos arrays   */
     /*  Para se tornar o vértice real   */
     selecionado++;
+    k++;
     /*  Procuramos o valor do vértice no tour   */
     for(int i = 0; i < s1.sequencia.size(); i++)
     {
@@ -253,7 +254,21 @@ void InserirNaSolucao(tSolucao&s1, int selecionado, int k)
 
 }
 
-
+void RemoveValor(vector <int> &CL, int k)
+{
+    /*  Somamos um a k, pois foi necessário uma regulação por conta dos índices dos arrays  */
+    k++;
+    /*  Quando for achado o vértice inserido, ele será apagado  */
+    for(int i = 0; i < CL.size(); i++)
+    {
+        if(CL[i] == k)
+        {
+            CL.erase(CL.begin() + i);
+            break;
+        }
+    }
+    
+}
 
 
 
@@ -306,19 +321,19 @@ int main(void)
     /*  Exemplo: s1, agora vira tour para os vertices {1,2,3,4,1}   */
 
     
-
+    /*
     for(int i = 0; i < s1.sequencia.size(); i++)
     {
         cout << s1.sequencia[i] << " "; 
     }
     cout << endl;
-    
+    */
     
 
     /*  Precisamos agora criar os vértices restantes que ainda faltam ser inseridos */
     vector <int> CL = Restantes(s1, dimensao);     /* Criação do CL */
     
-    
+    /*
     
     cout << "CL: " << CL.size() << endl;
     for(int i = 0; i < CL.size(); i++)
@@ -326,7 +341,7 @@ int main(void)
         cout << CL[i] << " "; 
     }
     cout << endl;
-    
+    */
     
     
     
@@ -336,7 +351,9 @@ int main(void)
     /*  Enquanto CL não estiver vazio, nós vamos fazer o teste de cada vértice que pertence a CL na entrada de uma aresta {i, j}    */
     /*  Vamos calcular seu custo de inserção e após isso, ordenar todos em ordem crescente  */
     
-    
+    while(!CL.empty())
+    {
+
         vector <InsertionInfo>  custoInsercao = CalcularCustoInsercao(s1, CL, matriz);
         /*  Chama a função para ordenar em forma crescente  */
         OrdenarEmOrdemCrescente(custoInsercao);
@@ -348,7 +365,10 @@ int main(void)
         int selecionado = rand() % ((int) ceil(alpha * custoInsercao.size()));
         /*  Vamos inserir no tour o vértice escolhido, enviando o próprio tour, a aresta removida e o vértice inserido  */
         InserirNaSolucao(s1, custoInsercao[selecionado].arestaRemovida, custoInsercao[selecionado].noInserido);
-    
+
+        /*  Vamos remover o vértice inserido em CL, chamando a função RemoveValro   */
+        RemoveValor(CL, custoInsercao[selecionado].noInserido);
+    }
 
     
     
@@ -359,15 +379,15 @@ int main(void)
 
 
     
+    /*
+    cout << "Onde inserido: " << custoInsercao[selecionado].noInserido << endl << "Aresta removida " << custoInsercao[selecionado].arestaRemovida << endl << "Custo: "<< custoInsercao[selecionado].custo << endl<< "-------- "<< endl;
     
-        cout << "Onde inserido: " << custoInsercao[selecionado].noInserido << endl << "Aresta removida " << custoInsercao[selecionado].arestaRemovida << endl << "Custo: "<< custoInsercao[selecionado].custo << endl<< "-------- "<< endl;
-
-          for(int i = 0; i < s1.sequencia.size(); i++)
-        {
-            cout << s1.sequencia[i] << " "; 
-        }
-        cout << endl;
-    
+    for(int i = 0; i < s1.sequencia.size(); i++)
+    {
+        cout << s1.sequencia[i] << " "; 
+    }
+    cout << endl;
+    */
     
     return 0;
     
