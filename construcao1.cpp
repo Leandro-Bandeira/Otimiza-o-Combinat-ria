@@ -116,7 +116,7 @@ vector <int> Restantes(tSolucao& s1, int quantidade)
 {
     /*  Criação de todos os vertices    */
     vector <int> v;
-    for(int i = 2; i < quantidade; i++)
+    for(int i = 2; i <= quantidade; i++)
     {
         v.push_back(i);
 
@@ -333,8 +333,8 @@ int main(void)
     /*  Precisamos agora criar os vértices restantes que ainda faltam ser inseridos */
     vector <int> CL = Restantes(s1, dimensao);     /* Criação do CL */
     
-    /*
     
+    /*
     cout << "CL: " << CL.size() << endl;
     for(int i = 0; i < CL.size(); i++)
     {
@@ -381,13 +381,13 @@ int main(void)
     
     /*
     cout << "Onde inserido: " << custoInsercao[selecionado].noInserido << endl << "Aresta removida " << custoInsercao[selecionado].arestaRemovida << endl << "Custo: "<< custoInsercao[selecionado].custo << endl<< "-------- "<< endl;
-    
+    */
     for(int i = 0; i < s1.sequencia.size(); i++)
     {
         cout << s1.sequencia[i] << " "; 
     }
     cout << endl;
-    */
+    
     
     return 0;
     
