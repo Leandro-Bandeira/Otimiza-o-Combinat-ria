@@ -270,7 +270,60 @@ void RemoveValor(vector <int> &CL, int k)
     
 }
 
+double CalculateSwapCost(tSoluca& s1, int vertice_i, int vertice_j)
+{
+    int armazenaValor;
+    double custo = 0;
+    for(int i = 0; i < s1.sequencia.size(); i++)
+    {
+        if(vertice_i == s1.sequencia[i])
+        {
+            if(vertice_i == 1)
+            {
+                custo += 
+            }
+            else
+            {
 
+            }
+
+        }
+    }
+    /*  Nessário reduzir, pois o array inicia em 0  */
+    i--;
+    j--;
+
+}
+bool bestImprovementSwap(tSolucao &s1)
+{
+    double bestDelta = 0;
+    int best_i, best_j;
+
+    for(int i = 1; i < s1.sequencia.size() - 1; i++)
+    {
+        for(int j = i + 1; j < s1.sequencia.size() - 1; j++)
+        {
+            double delta = CalculateSwapCost(s1,i,j);
+            if (delta < bestDelta)
+            {
+                bestDelta = delta;
+                best_i = i;
+                best_j = j;
+            }
+        }
+        
+    }
+    
+    if(bestDelta < 0)
+    {
+        swap(s1.sequencia[best_i], s1.sequencia[best_j]);
+        s1.custo = s1.custo - delta;
+        return true;
+    }
+
+    return false;
+
+}
 
 int main(void)
 {
@@ -388,6 +441,7 @@ int main(void)
     }
     cout << endl;
     
+    bestImprovementSwap(s1);
     
     return 0;
     
