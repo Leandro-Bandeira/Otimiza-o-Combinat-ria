@@ -270,40 +270,66 @@ void RemoveValor(vector <int> &CL, int k)
     
 }
 
-double CalculateSwapCost(tSoluca& s1, int vertice_i, int vertice_j)
-{
-    int armazenaValor;
-    double custo = 0;
-    for(int i = 0; i < s1.sequencia.size(); i++)
+void CalculaCustoTotal(tSolucao& s1, tVertice matriz[])
+{   
+    int vertice_i;  /*  Primeiro vértice    */
+    int vertice_j;  /*  Vértice imeditamente posterior  */
+
+
+    for(int i = 0; i < s1.sequencia.size() - 1; i++)
     {
-        if(vertice_i == s1.sequencia[i])
-        {
-            if(vertice_i == 1)
-            {
-                custo += 
-            }
-            else
-            {
+        vertice_i = s1.sequencia[i];
+        vertice_i--;
 
-            }
+        vertice_j = s1.sequencia[i + 1];
+        vertice_j--;
 
-        }
+        s1.custo += matriz[vertice_i].verticeB[vertice_j];
+        
+
+        
     }
-    /*  Nessário reduzir, pois o array inicia em 0  */
-    i--;
-    j--;
+
+
 
 }
-bool bestImprovementSwap(tSolucao &s1)
+
+
+double CalculateSwapCost(tSolucao &s1, int i, int j, tVertice matriz[])
+{
+    double custoTroca = 0;
+
+    int vertice_i = s1.sequencia[i];
+    int vertice_j = s1.sequencia[j];
+    vertice_i--;
+    vertice_j--;
+
+    int vertice_i_anterior = s1.sequencia[i - 1];
+    vertice_i_anterior--;
+
+    int vertice_j_anterior = s1.sequencia[j - 1];
+    vertice_j_anterior--;
+
+    
+
+    custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_j] + matriz[vertice_i].verticeB[vertice_j_anterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_j_anterior].verticeB[vertice_j]);
+    cout << custoTroca << endl;
+    return custoTroca;
+
+}
+bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
 {
     double bestDelta = 0;
+    double delta;
     int best_i, best_j;
+
+    /*  Devemos inicializar com i == 1, pois vamos trocar entre os '1'  */
 
     for(int i = 1; i < s1.sequencia.size() - 1; i++)
     {
         for(int j = i + 1; j < s1.sequencia.size() - 1; j++)
         {
-            double delta = CalculateSwapCost(s1,i,j);
+            delta = CalculateSwapCost(s1,i,j, matriz);
             if (delta < bestDelta)
             {
                 bestDelta = delta;
@@ -324,6 +350,7 @@ bool bestImprovementSwap(tSolucao &s1)
     return false;
 
 }
+
 
 int main(void)
 {
@@ -374,27 +401,15 @@ int main(void)
     /*  Exemplo: s1, agora vira tour para os vertices {1,2,3,4,1}   */
 
     
-    /*
-    for(int i = 0; i < s1.sequencia.size(); i++)
-    {
-        cout << s1.sequencia[i] << " "; 
-    }
-    cout << endl;
-    */
+   
+    
     
 
     /*  Precisamos agora criar os vértices restantes que ainda faltam ser inseridos */
     vector <int> CL = Restantes(s1, dimensao);     /* Criação do CL */
     
     
-    /*
-    cout << "CL: " << CL.size() << endl;
-    for(int i = 0; i < CL.size(); i++)
-    {
-        cout << CL[i] << " "; 
-    }
-    cout << endl;
-    */
+   
     
     
     
@@ -435,13 +450,29 @@ int main(void)
     /*
     cout << "Onde inserido: " << custoInsercao[selecionado].noInserido << endl << "Aresta removida " << custoInsercao[selecionado].arestaRemovida << endl << "Custo: "<< custoInsercao[selecionado].custo << endl<< "-------- "<< endl;
     */
+    
+    cout << "Antes: " << endl;
     for(int i = 0; i < s1.sequencia.size(); i++)
     {
         cout << s1.sequencia[i] << " "; 
     }
     cout << endl;
     
-    bestImprovementSwap(s1);
+    CalculaCustoTotal(s1, matriz);
+    /*
+    cout << "o custo antes eh: " << s1.custo << endl;
+    */
+    bestImprovementSwap(s1, matriz);
+    /*
+    cout << "Depois: " << endl;
+    for(int i = 0; i < s1.sequencia.size(); i++)
+    {
+        cout << s1.sequencia[i] << " "; 
+    }
+    cout << endl;
+    cout << "o custo depois eh: " << s1.custo << endl;
+    */
+
     
     return 0;
     
