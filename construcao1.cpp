@@ -253,7 +253,17 @@ void InserirNaSolucao(tSolucao&s1, int selecionado, int k)
     }
 
 }
-
+/****
+ * RemoveValor(): Função responsável pro remover os valores presentes no conjunto CL.
+ * 
+ * 
+ * Parâmetros:
+ *                  CL(entrada e saída): Conjunto que será modificado
+ *                  k(entrada): valor que será retirado do conjunto
+ * 
+ * Retorno:
+ *                  Nenhum
+ ****/
 void RemoveValor(vector <int> &CL, int k)
 {
     /*  Somamos um a k, pois foi necessário uma regulação por conta dos índices dos arrays  */
@@ -270,7 +280,19 @@ void RemoveValor(vector <int> &CL, int k)
     
 }
 
-void CalculaCustoTotal(tSolucao& s1, tVertice matriz[])
+
+/****
+ * CalculaCustoTotal(): Função responsável por calcular o custo total do tour
+ * 
+ * 
+ * Parâmetros:
+ *                      s1(entrada): tour que será consultado
+ *                      matriz[](entrada): valores dos custos
+ * 
+ * Retorno:
+ *                      nenhum
+ ****/
+void CalculaCustoTotal( tSolucao& s1, tVertice matriz[])
 {   
     int vertice_i;  /*  Primeiro vértice    */
     int vertice_j;  /*  Vértice imeditamente posterior  */
@@ -287,7 +309,6 @@ void CalculaCustoTotal(tSolucao& s1, tVertice matriz[])
         s1.custo += matriz[vertice_i].verticeB[vertice_j];
         
 
-        
     }
 
 
@@ -298,22 +319,24 @@ void CalculaCustoTotal(tSolucao& s1, tVertice matriz[])
 double CalculateSwapCost(tSolucao &s1, int i, int j, tVertice matriz[])
 {
     double custoTroca = 0;
-
+    /*  Deve-se fazer a regulação com a retirada de 1, pois o índice da matriz inicia em 0  */
+    /*  Logo, a matriz vai de 0 a 13, o qual o índice 0 representa a cidade 1   */
     int vertice_i = s1.sequencia[i];
     int vertice_j = s1.sequencia[j];
     vertice_i--;
     vertice_j--;
 
+    /*  Pegamos o valor do vértice anterior de i    */
     int vertice_i_anterior = s1.sequencia[i - 1];
     vertice_i_anterior--;
 
-    int vertice_j_anterior = s1.sequencia[j - 1];
-    vertice_j_anterior--;
+    /*  Pegamos o vértice posterior de j    */
+    int vertice_j_posterior = s1.sequencia[j + 1];
+    vertice_j_posterior--;
 
     
-
-    custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_j] + matriz[vertice_i].verticeB[vertice_j_anterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_j_anterior].verticeB[vertice_j]);
-    cout << custoTroca << endl;
+    /*  Fazemos o cáculo do custo, pegamos as novas arestas criadas e retiramos o valor das arestas antiga, para ver qual o valor do custo  */
+    custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_j] + matriz[vertice_i].verticeB[vertice_j_posterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_j_posterior].verticeB[vertice_j]);
     return custoTroca;
 
 }
@@ -324,14 +347,18 @@ bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
     int best_i, best_j;
 
     /*  Devemos inicializar com i == 1, pois vamos trocar entre os '1'  */
-
+    /*  Estamos enviando o vértice posterior a 1 e o próximo a ele  , no nosso tour inicial */
     for(int i = 1; i < s1.sequencia.size() - 1; i++)
     {
         for(int j = i + 1; j < s1.sequencia.size() - 1; j++)
         {
+            /*  Queremos receber o custo de troca entre esses vértices  */
             delta = CalculateSwapCost(s1,i,j, matriz);
+            /*  Verificamos se o custo de troca é menor que o anterior  */
+            /*  Porque se for, vale a pena a troca  */
             if (delta < bestDelta)
             {
+                /*  Mudamos o valor de menor custo de troca */
                 bestDelta = delta;
                 best_i = i;
                 best_j = j;
@@ -340,6 +367,7 @@ bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
         
     }
     
+    /*  Se valer a pena a troca, fazemos a troca entre os valores e mudamos o custo */
     if(bestDelta < 0)
     {
         swap(s1.sequencia[best_i], s1.sequencia[best_j]);
@@ -380,20 +408,8 @@ int main(void)
 
     
    
-    /*
-    for(int i = 0; i < dimensao; i++)
-    {
-        for(int j = 0; j < dimensao; j++)
-        {
-            cout << matriz[i].verticeB[j] << " "; 
-        }
-        cout << endl;
-    }
-    */
-    
     
 
-    
     
     /*  Chamada da função para escolha de três números aleatórios   */
     /*  Enviamos dimensão porque é a quantidade de véritices    */
@@ -434,44 +450,22 @@ int main(void)
         /*  Vamos inserir no tour o vértice escolhido, enviando o próprio tour, a aresta removida e o vértice inserido  */
         InserirNaSolucao(s1, custoInsercao[selecionado].arestaRemovida, custoInsercao[selecionado].noInserido);
 
-        /*  Vamos remover o vértice inserido em CL, chamando a função RemoveValro   */
+        /*  Vamos remover o vértice inserido em CL, chamando a função RemoveValor   */
         RemoveValor(CL, custoInsercao[selecionado].noInserido);
     }
 
     
-    
-    
-    
-
-
-
-
-    
-    /*
-    cout << "Onde inserido: " << custoInsercao[selecionado].noInserido << endl << "Aresta removida " << custoInsercao[selecionado].arestaRemovida << endl << "Custo: "<< custoInsercao[selecionado].custo << endl<< "-------- "<< endl;
-    */
-    
-    cout << "Antes: " << endl;
-    for(int i = 0; i < s1.sequencia.size(); i++)
-    {
-        cout << s1.sequencia[i] << " "; 
-    }
-    cout << endl;
-    
+    /*  Chamada da função para fazer o calculo do custo inicial */
     CalculaCustoTotal(s1, matriz);
-    /*
-    cout << "o custo antes eh: " << s1.custo << endl;
-    */
+    
+    
     bestImprovementSwap(s1, matriz);
-    /*
-    cout << "Depois: " << endl;
-    for(int i = 0; i < s1.sequencia.size(); i++)
-    {
-        cout << s1.sequencia[i] << " "; 
-    }
-    cout << endl;
-    cout << "o custo depois eh: " << s1.custo << endl;
-    */
+    
+  
+   
+
+
+    
 
     
     return 0;
