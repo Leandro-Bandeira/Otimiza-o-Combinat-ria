@@ -315,7 +315,20 @@ void CalculaCustoTotal( tSolucao& s1, tVertice matriz[])
 
 }
 
-
+/****
+ * CalculateSwapCost(): Função responsável por calcular o custo de troca pelo método swap
+ * 
+ * 
+ * Parâmetros:
+ *                      s1(entrada): tour no qual será consultado os vértices
+ *                      i: primeiro índice que aponta para um vértice
+ *                      j: segundo índice que aponta para o segundo vértice de troca
+ *                      matriz(entrada): valor onde será consultado o custo das arestas
+ * 
+ * Retorno:
+ *                      Valor do custo de troca
+ * 
+ ****/
 double CalculateSwapCost(tSolucao &s1, int i, int j, tVertice matriz[])
 {
     double custoTroca = 0;
@@ -340,6 +353,27 @@ double CalculateSwapCost(tSolucao &s1, int i, int j, tVertice matriz[])
     return custoTroca;
 
 }
+
+
+
+
+
+
+
+
+
+/****
+ * BestImprovementSwap(): Função responsável por fazer as trocas entre os vértices, a partir do método swap
+ * 
+ * 
+ * Parâmetros:
+ *                          s1(entrada e saída): tour que provavelmente será modificado
+ *                          matriz[]: matriz que possui os custos de cada aresta
+ * 
+ * Retorno:
+ *                          true:  se de fato houve o método swap, ou seja, uma provável melhora
+ *                          false: se não houve troca por meio do swap
+ ****/
 bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
 {
     double bestDelta = 0;
@@ -378,6 +412,56 @@ bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
     return false;
 
 }
+
+
+void BuscaLocal(tSolucao& s1, tVertice matriz[])
+{
+    /*  Criamos um vector, para a retirada de um valor aleatório    */
+    vector <int> NL = {1,2,3,4,5};
+    bool improved = false;
+
+    /*  Fazemos esse loop até que o vector esteja vazio */
+    while(NL.empty() == false)
+    {
+        /*  Pegamos um valor aleatório, de 1 a 5 */
+        /*  E fazemos um melhoramento   */
+        /*  Caso de fato haja um melhoramento, não modifcamos o NL e continuamos até que   */
+        /*  Não haja um melhoramento pelos métodos, se não houver, retiramos aquele método da seleção   */
+        int n = rand() % NL.size();
+        switch(NL[n])
+        {
+            case 1:
+                improved = bestImprovementSwap(s1, matriz);
+                break;
+
+            case 2:
+                break;
+
+            case 3:
+                break;
+            case 4:
+                break;
+            
+            case 5:
+                break;
+        }
+        /*  Se houve de fato melhora, modificamos NL    */
+        if(improved)
+        {
+            NL = {1,2,3,4,5};
+        }
+        /*  Se não houve melhora, apagamos aquele método    */
+        else
+        {
+            NL.erase(NL.begin() + n);
+        }
+
+    }
+
+}
+
+
+
 
 
 int main(void)
@@ -459,7 +543,7 @@ int main(void)
     CalculaCustoTotal(s1, matriz);
     
     
-    bestImprovementSwap(s1, matriz);
+    BuscaLocal(s1, matriz);
     
   
    
