@@ -461,7 +461,46 @@ bool bestImprovement2opt(tSolucao& s1, tVertice matriz[])
 
 }
 
+double CalculateOrCost(tSolucao& s1, int i, tVertice matriz[], int tamanho)
+{
+    double custoTroca;
+    int vertice_i = s1.sequencia[i];
+    vertice_i--;
+    int vertice_j = s1.sequencia[i + tamanho];
 
+
+}
+bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
+{
+    double bestDelta = 0;
+    double delta;
+    int best_i, best_j;
+
+
+    for(int i = 1; i < s1.sequencia.size() - 1; i++)
+    {
+        
+        delta = CalculateOrCost(s1, i,matriz);
+        if(delta < bestDelta)
+        {
+            bestDelta = delta;
+            best_i = i;
+            best_j = j;
+        }
+
+        
+    }
+
+    if(bestDelta < 0)
+    {
+        swap(s1.sequencia[best_i], s1.sequencia[best_j]);
+        s1.custo = s1.custo - delta;
+        return true;
+    }
+
+    return false;
+
+}
 
 /****
  * BuscaLocal(): Função responsável por chamar as outras funções de melhoramento de solução
@@ -500,6 +539,7 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
                 break;
 
             case 3:
+                improved = bestImprovementOrOpt(s, matriz, 1); // Reinsertion
                 break;
             case 4:
                 break;
