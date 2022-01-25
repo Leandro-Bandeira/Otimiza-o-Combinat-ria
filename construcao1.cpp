@@ -413,7 +413,68 @@ bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
 
 }
 
+/****
+ * BestImprovemente2opt(): Função responsável por fazer as trocas entre vértices não adjacentes
+ * 
+ * 
+ * Parâmetros:
+ *                          s1(entrada e saída): tour que será modificado ou nao
+ *                          matriz(entrada): matriz onde será consultada os dados de custo
+ * 
+ * 
+ * Retorno:
+ *                          True: se houve troca
+ *                          false: senao houve troca
+****/
+bool bestImprovement2opt(tSolucao& s1, tVertice matriz[])
+{
+    double bestDelta = 0;
+    double delta;
+    int best_i, best_j;
 
+
+    for(int i = 1; i < s1.sequencia.size() - 1; i++)
+    {
+        for(int j = i + 2; j < s1.sequencia.size() - 1; j++)
+        {
+
+            delta = CalculateSwapCost(s1, i, j, matriz);
+            if(delta < bestDelta)
+            {
+                bestDelta = delta;
+                best_i = i;
+                best_j = j;
+            }
+
+        }
+    }
+
+    if(bestDelta < 0)
+    {
+        swap(s1.sequencia[best_i], s1.sequencia[best_j]);
+        s1.custo = s1.custo - delta;
+        return true;
+    }
+
+    return false;
+
+
+}
+
+
+
+/****
+ * BuscaLocal(): Função responsável por chamar as outras funções de melhoramento de solução
+ * 
+ * 
+ * Parâmetros:
+ *               s1(entrada): Dados onde serão consultados os tour iniciais
+ *               matriz(entrada): Dados de custo das arestas
+ * 
+ * 
+ * Retorno: Nenhum
+ * 
+ ****/
 void BuscaLocal(tSolucao& s1, tVertice matriz[])
 {
     /*  Criamos um vector, para a retirada de um valor aleatório    */
@@ -435,6 +496,7 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
                 break;
 
             case 2:
+                improved = bestImprovement2opt(s1, matriz);
                 break;
 
             case 3:
@@ -541,9 +603,10 @@ int main(void)
     
     /*  Chamada da função para fazer o calculo do custo inicial */
     CalculaCustoTotal(s1, matriz);
-    
+
     
     BuscaLocal(s1, matriz);
+    
     
   
    
