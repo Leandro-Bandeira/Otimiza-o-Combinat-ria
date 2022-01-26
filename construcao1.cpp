@@ -461,15 +461,93 @@ bool bestImprovement2opt(tSolucao& s1, tVertice matriz[])
 
 }
 
-double CalculateOrCost(tSolucao& s1, int i, tVertice matriz[], int tamanho)
+
+
+/****
+ * CalculateOrCost(): Calcula o custo de troca da operação de reinsertion
+ * 
+ * 
+ * Parâmetros:
+ *                    s1(entrada): tour onde será consultado os vértices
+ *                    i(entrada): índice do primeiro vértice da sequencia, que pode ser uma sequência de até 3 valores
+ *                    j(entrada): índice do vértice que irá trocar de lugar com o vértice de índice i
+ *                    matriz(entrada): valor onde será consutlado os custos de cada aresta
+ *                    tamanho(entrada): valor do tamanho da sequeência
+ * 
+ * Retorno:
+ *                    Custo de troca
+ * 
+ ****/
+double CalculateOrCost(tSolucao& s1, int i, int j, tVertice matriz[], int tamanho)
 {
-    double custoTroca;
-    int vertice_i = s1.sequencia[i];
-    vertice_i--;
-    int vertice_j = s1.sequencia[i + tamanho];
+    double custoTroca;  // variável que armazena o custo de troca
+
+    int vertice_i = s1.sequencia[i];    // Primeiro vértice da sequência
+    vertice_i--;    //  Devemos reduzir por conta da matriz que inicia em 0 e não em 1
+
+    int vertice_i_anterior = s1.sequencia[i - 1];   // Vertice anterior ao primeiro vértice da sequência
+    vertice_i_anterior--;
 
 
+    int vertice_troca = s1.sequencia[j];    // vertice o qual será trocado pelo vértice de índice i
+    vertice_troca--;
+
+
+    int vertice_troca_posterior = s1.sequencia[j + 1];  // Vértice posterior ao vértice de troca
+    vertice_troca_posterior--;
+
+    //  Se o tamanho for igual 2 , quer dizer que será reinserido dois vértices em uma sequência
+    if(tamanho == 2)
+    {
+        /*  Segundo vértice que será trocado    */
+        int vertice_j = s1.sequencia[i + 1];
+        vertice_j--;
+        
+        custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_troca] + matriz[vertice_j].verticeB[vertice_troca_posterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_troca].verticeB[vertice_troca_posterior]);
+        return custoTroca;
+    }
+
+    // Se o tamanho for igual 3, quer dizer que será reinserido três vértices em uma sequência
+    if(tamanho == 3)
+    {
+        /*  Segundo vértice que será trocado    */
+        int vertice_j = s1.sequencia[i + 1];
+        vertice_j--;
+
+        /*  Terceiro vértice que será trocado   */
+        int vertice_k = s1.sequencia[i + 2];
+        vertice_k--;
+
+
+        custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_troca] + matriz[vertice_k].verticeB[vertice_troca_posterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_troca].verticeB[vertice_troca_posterior]);
+        return custoTroca;
+
+
+
+    }
+    if(tamanho == 1)
+    {
+        custoTroca = (matriz[vertice_i_anterior].verticeB[vertice_troca] + matriz[vertice_i].verticeB[vertice_troca_posterior]) - (matriz[vertice_i_anterior].verticeB[vertice_i] + matriz[vertice_troca].verticeB[vertice_troca_posterior]);
+        return custoTroca;
+    }
+
+    
 }
+
+
+/****
+ * BestImprovementOrOpt(): Função responsável por fazer o melhoramento pelo metodo de reisertion
+ * 
+ * 
+ * Parâmetros:
+ *                          s1(entrada e saída): tour que será modificado para melhoramento
+ *                          matriz(entrada): valor onde será consultado os dados de custo
+ *                          tamanho(entrada): variável responsável por indicar quantos valores irá fazer a reisertion
+ * 
+ * Retorno:
+ *                          true: se houve melhoramento
+ *                          false: se não houve melhoramento
+ ****/
 bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
 {
     double bestDelta = 0;
@@ -480,14 +558,21 @@ bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
     for(int i = 1; i < s1.sequencia.size() - 1; i++)
     {
         
-        delta = CalculateOrCost(s1, i,matriz);
-        if(delta < bestDelta)
+        /*  Fazemos j = i + tamanho, pois será o índice do vértice que será trocado     */
+        /*  Se temos: 1 2 3 4 5 e tamanho == 1, ent devemos trocar o valor 2 com a posição 3 */
+        /*  Se temos: 1 2 3 4 5 e tamanho == 2, ent devemos trocar o 2 e o 3 pela posicao do numero 4 que irá para a posição do numero 2    */
+        for(int j = i + tamanho; j < s1.sequencia.size() - 1; j++)
         {
-            bestDelta = delta;
-            best_i = i;
-            best_j = j;
-        }
+            delta = CalculateOrCost(s1, i, j, matriz, tamanho);
+            if(delta < bestDelta)
+            {
+                bestDelta = delta;
+                best_i = i;
+                best_j = j;
+            }
 
+        }
+        
         
     }
 
@@ -521,7 +606,7 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
     bool improved = false;
 
     /*  Fazemos esse loop até que o vector esteja vazio */
-    while(NL.empty() == false)
+    while(!NL.empty())
     {
         /*  Pegamos um valor aleatório, de 1 a 5 */
         /*  E fazemos um melhoramento   */
@@ -532,20 +617,28 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
         {
             case 1:
                 improved = bestImprovementSwap(s1, matriz);
+
                 break;
 
             case 2:
                 improved = bestImprovement2opt(s1, matriz);
-                break;
 
+                break;
+    
             case 3:
-                improved = bestImprovementOrOpt(s, matriz, 1); // Reinsertion
+                improved = bestImprovementOrOpt(s1, matriz, 1); // Reinsertion
+
                 break;
             case 4:
+                improved = bestImprovementOrOpt(s1, matriz, 2); // Or-opt2
+
                 break;
             
             case 5:
+                improved = bestImprovementOrOpt(s1, matriz, 3); // Or-opt3
+                
                 break;
+            
         }
         /*  Se houve de fato melhora, modificamos NL    */
         if(improved)
@@ -647,8 +740,7 @@ int main(void)
     
     BuscaLocal(s1, matriz);
     
-    
-  
+    cout << s1.custo << endl;
    
 
 
