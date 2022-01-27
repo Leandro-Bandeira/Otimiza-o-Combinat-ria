@@ -448,10 +448,22 @@ bool bestImprovement2opt(tSolucao& s1, tVertice matriz[])
 
         }
     }
+    /*  "l" e "k" são as variáveis de controle para a mudança de ordenação  */
+    /*  "l" possui o índice da variável mais distante e k da variável mais próxima do início    */
+    int l = best_j; 
+    int k = best_i;
 
     if(bestDelta < 0)
     {
-        swap(s1.sequencia[best_i], s1.sequencia[best_j]);
+        /*  Para a realização da troca, iremos fazer a troca entre os valores extremos até que o índice do menor valor seja maior do que o índice do extremo maior */
+        while(k < l)
+        {
+            swap(s1.sequencia[l], s1.sequencia[k]);
+            l--;
+            k++;
+
+        }
+        
         s1.custo = s1.custo - delta;
         return true;
     }
@@ -606,7 +618,7 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
     bool improved = false;
 
     /*  Fazemos esse loop até que o vector esteja vazio */
-    while(!NL.empty())
+    while(NL.empty() == false)
     {
         /*  Pegamos um valor aleatório, de 1 a 5 */
         /*  E fazemos um melhoramento   */
@@ -619,12 +631,12 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
                 improved = bestImprovementSwap(s1, matriz);
 
                 break;
-
+            
             case 2:
                 improved = bestImprovement2opt(s1, matriz);
 
                 break;
-    
+            /*
             case 3:
                 improved = bestImprovementOrOpt(s1, matriz, 1); // Reinsertion
 
@@ -638,6 +650,7 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
                 improved = bestImprovementOrOpt(s1, matriz, 3); // Or-opt3
                 
                 break;
+            */
             
         }
         /*  Se houve de fato melhora, modificamos NL    */
@@ -737,7 +750,6 @@ int main(void)
     /*  Chamada da função para fazer o calculo do custo inicial */
     CalculaCustoTotal(s1, matriz);
 
-    
     BuscaLocal(s1, matriz);
     
     cout << s1.custo << endl;

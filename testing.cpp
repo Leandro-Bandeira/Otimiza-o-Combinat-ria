@@ -5,42 +5,29 @@
 using namespace std;
 
 
-typedef struct
-{
-    vector <int> a;
-
-}tInteiro;
 
 
 
-void Mostra(tInteiro lea[], int dimensao)
-{
-    for(int i = 0; i < dimensao; i++)
-    {
-        for(int j = 0; j < dimensao ; j++)
-        {
-            cout << lea[i].a[j] << " ";
-        }
-        cout << endl;
-    }
-}
 int main(void)
 {
-    int dimensao;
-    int numero;
+    vector <int> a = {1,2,3,4,5, 9, 6,1};
+    //1 6 5 4 3 2 1
 
-    cin >> dimensao;
-    tInteiro lea[dimensao];
-
-    for(int i = 0; i < dimensao; i++)
+    int  k = 1;
+    int j = 5;
+    while(k < j)
     {
-        for(int j = 0; j < 2; j++)
-        {
-            cin >> numero;
-            lea[i].a.push_back(numero);
-        }
+        swap(a[j], a[k]);
+        j--;
+        k++;
+        
     }
-    Mostra(lea, dimensao);
+
+    for(int i = 0; i < 8; i++)
+    {
+        cout << a[i] << " ";
+    }
+    cout << endl;
 
     
 
