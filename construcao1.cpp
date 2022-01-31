@@ -405,7 +405,6 @@ bool bestImprovementSwap(tSolucao &s1, tVertice matriz[])
     if(bestDelta < 0)
     {
         swap(s1.sequencia[best_i], s1.sequencia[best_j]);
-        s1.custo = s1.custo - delta;
         return true;
     }
 
@@ -464,7 +463,6 @@ bool bestImprovement2opt(tSolucao& s1, tVertice matriz[])
 
         }
         
-        s1.custo = s1.custo - delta;
         return true;
     }
 
@@ -637,7 +635,7 @@ bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
             
 
         }
-        s1.custo = s1.custo - delta;
+    
         return true;
     }
 
@@ -797,14 +795,19 @@ int main(void)
     
     /*  Chamada da função para fazer o calculo do custo inicial */
     CalculaCustoTotal(s1, matriz);
-
-    
-    
+   
     
     BuscaLocal(s1, matriz);
+    /*  Redefinição do custo    */
+    s1.custo = 0;
+    /*  Calculando novamento o custo total  */
 
-    cout << s1.custo << endl;
+    CalculaCustoTotal(s1, matriz);
+
+
     
+
+
     
     
    
