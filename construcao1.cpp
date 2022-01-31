@@ -816,6 +816,8 @@ int main(void)
     /*  Calculando novamento o custo total  */
     CalculaCustoTotal(s1, matriz);
 
+    cout << s1.custo << endl;
+
 
     
 
