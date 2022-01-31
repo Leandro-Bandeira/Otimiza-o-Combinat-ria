@@ -597,14 +597,22 @@ bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
 
     if(bestDelta < 0)
     {
+        /*  Se o tamanho da sequência for igual a 1 */
+        /*  Então iremos trocar somente um de posição   */
         if(tamanho == 1)
         {
             swap(s1.sequencia[best_i], s1.sequencia[best_j]);
         }
 
+        /*  Se o tamanho da sequência for igual a 2 */
+        /*  Vamos trocar a partir do imeditamente anterior ao vertice de trocar */
+        /*  Por exemplo, se temos a sequência 1 2 3 4 5 1, vamos trocar primeiro o 3 com o 4    */
+        /*  E depois vamos trocar o 2 com o 4, a partir de redução de índices   */
         else if(tamanho == 2)
         {
+            /*  índice do vértice de troca  */
             indicePosterior = best_j;
+            /*  índice posterior ao início da sequência */
             indiceAnterior = best_i + 1;
             contador = 0;
 
@@ -618,9 +626,13 @@ bool bestImprovementOrOpt(tSolucao& s1, tVertice matriz[], int tamanho)
 
         }
         
+        /*  Se o tamanho da sequência for igual a 3 */
+        /*  Será realizado a mesma coisa que o anterior, mas agora é com 3 variáveis    */
         else
         {
+            /*  Vértice de troca    */
             indicePosterior = best_j;
+            /*  Último vértice de troca, que será trocado com o seu imeditamente posteror   */
             indiceAnterior = best_i + 2;
             
             contador = 0;
@@ -800,8 +812,8 @@ int main(void)
     BuscaLocal(s1, matriz);
     /*  Redefinição do custo    */
     s1.custo = 0;
-    /*  Calculando novamento o custo total  */
 
+    /*  Calculando novamento o custo total  */
     CalculaCustoTotal(s1, matriz);
 
 
