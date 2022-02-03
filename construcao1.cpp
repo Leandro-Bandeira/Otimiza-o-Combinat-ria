@@ -726,6 +726,62 @@ void BuscaLocal(tSolucao& s1, tVertice matriz[])
 
 }
 
+tSolucao Perturbacao(tSolucao *s1)
+{
+    tSolucao solution2;
+    swap(solution2.sequencia, s1->sequencia);   // Copiando temporareamente a solução s1 em solução 2
+    int limiteInferior = 2; // Menor limite de tamanho que podemos ter para o movimento de double bridge
+    int limiteSuperior = ceil((double) solution2.sequencia.size() / 10);    // Maior limite de tamanho que podemos ter para o movimento de double bridge
+
+    int metadeInferior = (solution2.sequencia.size() / 2) - 1;  //  Tamanho da metade inferior
+    
+
+    unsigned seed = time(0);
+    srand(seed);
+
+    // Gerando os tamanho aleatorio para a realização da troca
+    int tamanho1 = (rand() % limiteSuperior) + limiteInferior;
+
+    int tamanho2 = (rand() % limiteSuperior) + limiteInferior;
+
+    // Escolhendo a posição de troca inicial aleatoriamente
+    int posicaoTrocaInicial = (rand() % metadeInferior) + 1;
+    int segundaPosicaoTroca = posicaoTrocaInicial + tamanho1 + 1;
+    int verticeI = posicaoTrocaInicial;
+    int verticeJ = segundaPosicaoTroca;
+
+
+    // Regularizando qual é o maior tamanho, para ver quantas vezes é necessário realizar a troca
+    int contador;
+
+    if(tamanho1 > tamanho2)
+    {
+        contador = tamanho1;
+        
+    }
+    else if(tamanho1 < tamanho2)
+    {
+        contador = tamanho2;
+    }
+    else
+    {
+        contador = tamanho1;
+    }
+
+
+    while(contador--)
+    {
+        swap(solution2.sequencia[verticeI], solution2.sequencia[verticeJ]);
+        verticeJ++;
+        verticeI++;;
+    }
+
+
+    
+    return solution2;
+
+}
+
 
 
 
@@ -813,10 +869,26 @@ int main(void)
     /*  Redefinição do custo    */
     s1.custo = 0;
 
+  
+    for(int i = 0; i < s1.sequencia.size(); i++)
+    {
+        cout << s1.sequencia[i] << " ";
+    }
+    cout << endl;
+    s1 = Perturbacao(&s1);
     /*  Calculando novamento o custo total  */
     CalculaCustoTotal(s1, matriz);
+    for(int i = 0; i < s1.sequencia.size(); i++)
+    {
+        cout << s1.sequencia[i] << " ";
+    }
+    cout << endl;
 
     cout << s1.custo << endl;
+
+
+
+    
 
 
     
